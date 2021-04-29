@@ -10,6 +10,7 @@
   <!-- Add CSS styling info for the map -->
   <style type="text/css">
     #map {
+      border-radius: 10px;
       height: 600px;
     }
   </style>
@@ -23,7 +24,7 @@
     <h1>Studio Week 4</h1>
   </div>
   <div>
-    <h5>Rat Map</h5>
+    <h2>Rat Map</h2>
   </div>
   <!-- Add multiple pages to web page-->
   <!-- active class displays the grey box around current page-->
@@ -37,100 +38,9 @@
 
   <!-- Add a div to give the map somewhere to go -->
   <div id='map'></div>
-  <!-- Add an information window -->
-  <div class='map-overlay' id='features'>
-    <h2>US population density</h2>
-    <div id='pd'>
-      <h3>Hover over a state!</h3>
-    </div>
-  </div>
-  <!-- Add a legend to the map -->
-  <div class='map-overlay' id='legend'></div>
 
   <script>
-    // Add your access token
-    mapboxgl.accessToken = 'pk.eyJ1IjoianN0cnplbXBrbyIsImEiOiJja2xoN3FnaHMwMHVnMnVtZ3R4ZGhyMWlkIn0.A-mfTeGCl1XSWMWhimG5HA';
-
-    // Create a variable called "map" to house your map
-    var map = new mapboxgl.Map({
-      // center on the continental US
-      center: [-98.5795, 39.8283],
-      zoom: 4,
-      // map style URL from MapBox Studio
-      style: "mapbox://styles/jstrzempko/cknwid05q2ge917rhow9a2c3k",
-      container: 'map',
-    });
-
-    map.on('load', function() {
-      // default pointer cursor
-      map.getCanvas().style.cursor = 'default';
-
-      // set the map to the continental US
-      map.fitBounds([
-        [-133.2421875, 16.972741],
-        [-47.63671875, 52.696361]
-      ]);
-
-      // make a pointer cursor
-      map.getCanvas().style.cursor = 'default';
-
-      // define layer names
-      var layers = [
-        '0-10',
-        '10-20',
-        '20-50',
-        '50-100',
-        '100-200',
-        '200-500',
-        '500-1000',
-        '1000+'
-      ];
-      var colors = [
-        '#FFEDA0',
-        '#FED976',
-        '#FEB24C',
-        '#FD8D3C',
-        '#FC4E2A',
-        '#E31A1C',
-        '#BD0026',
-        '#800026'
-      ];
-
-      // add a legend
-      for (i = 0; i < layers.length; i++) {
-        var layer = layers[i];
-        var color = colors[i];
-        var item = document.createElement('div');
-        var key = document.createElement('span');
-        key.className = 'legend-key';
-        key.style.backgroundColor = color;
-
-        var value = document.createElement('span');
-        value.innerHTML = layer;
-        item.appendChild(key);
-        item.appendChild(value);
-        legend.appendChild(item);
-      }
-
-      // add the information window
-      map.on('mousemove', function(e) {
-        var states = map.queryRenderedFeatures(e.point, {
-          layers: ['statedata']
-        });
-
-        if (states.length > 0) {
-          document.getElementById('pd').innerHTML =
-            '<h3><strong>' +
-            states[0].properties.name +
-            '</strong></h3><h4><strong><em>' +
-            states[0].properties.density +
-            '</strong> people per square mile</em></h4>';
-        } else {
-          document.getElementById('pd').innerHTML =
-            '<h4>Hover over a state!</h4>';
-        }
-      });
-    });
+  
   </script>
 </body>
 
