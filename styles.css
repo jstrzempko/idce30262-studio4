@@ -1,0 +1,72 @@
+body {
+  background-color: #383838;
+  margin: 60px auto;
+  width: 70%;
+}
+
+h1 {
+  color: #F5F5F5;
+  font-size: 2.5em;
+  font-family: 'Helvetica', 'Sans-Serif';
+}
+
+h2 {
+  color: #000;
+  font-size: 1.5em;
+  font-family: 'Helvetica', 'Sans-Serif';
+}
+
+h3 {
+  color: #000;
+  font-size: 1em;
+  font-family: 'Helvetica', 'Sans-Serif';
+}
+
+h5 {
+  color: #c8c8c8;
+  font-size: 2em;
+  font-family: 'Helvetica', 'Sans-Serif';
+}
+
+p {
+  font-size: 1em;
+  font-family: 'Helvetica', 'Arial', 'Sans-Serif';
+  line-height: 1.4em;
+  color: #F5F5F5;
+}
+
+ul {
+  font-family: 'Helvetica', 'Arial', 'Sans-Serif';
+  list-style-type: none;
+  margin: 1px;
+  padding: 1px;
+  overflow: hidden;
+  background-color: #383838;
+}
+
+li {
+  font-family: 'Helvetica', 'Arial', 'Sans-Serif'
+    float: left;
+  border-right: 2px #383838;
+}
+
+/* Add a border to all( but not the last) list items */
+li:last-child {
+  border-right: none;
+}
+
+li a {
+  display: inline-block;
+  color: #F5F5F5;
+  padding: 15px 17px;
+  text-decoration: none;
+}
+
+/* Links will change color when hovered over */
+li a:hover {
+  background-color: #a09f9f;
+}
+
+.active {
+  background-color: #a09f9f;
+}
