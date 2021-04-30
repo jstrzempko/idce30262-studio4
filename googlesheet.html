@@ -48,7 +48,6 @@
   <div id='map'></div>
 
   <script>
-    //https://docs.google.com/spreadsheets/d/1o9jpKsqQRKVssf5vQ8o7AGomLGCF7oI-bZLqxpL1y6M/gviz/tq?tqx=out:csv&sheet=sheet1
 
     // add mapbox access token
     mapboxgl.accessToken = 'pk.eyJ1IjoianN0cnplbXBrbyIsImEiOiJja2xoN3FnaHMwMHVnMnVtZ3R4ZGhyMWlkIn0.A-mfTeGCl1XSWMWhimG5HA';
@@ -88,51 +87,6 @@
             }
           });
 
-
-          // Add a popup: https://docs.mapbox.com/mapbox-gl-js/example/popup/
-          var popup = new mapboxgl.Popup({
-              closeOnClick: false
-            })
-            .setLngLat([-111.312026, 45.258260])
-            .setHTML('<h2>Welcome to Big Sky!</h2><h3>Use the map control buttons to move, tilt, turn, and geolocate.</h3>')
-            .addTo(map);
-
-          // Add a function that flies to a location: https://docs.mapbox.com/mapbox-gl-js/api/#map#flyto
-          // fly with default options to null island
-          map.flyTo({
-            center: [0, 0],
-            zoom: 9
-          });
-          // using flyTo options
-          map.flyTo({
-            center: [0, 0],
-            zoom: 9,
-            speed: 0.5,
-            curve: 1,
-            easing(t) {
-              return t;
-            }
-          });
-
-          // Add a search box: https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder/
-          // Add the control to the map.
-          map.addControl(
-            new MapboxGeocoder({
-              accessToken: mapboxgl.accessToken,
-              mapboxgl: mapboxgl
-            })
-          );
-
-          // Add pan and zoom controls: https://docs.mapbox.com/mapbox-gl-js/api/#map#addcontrol
-          map.addControl(new mapboxgl.NavigationControl());
-
-          // Add a geolocation button: https://docs.mapbox.com/mapbox-gl-js/api/#geolocatecontrol
-          map.addControl(new mapboxgl.GeolocateControl({
-            positionOptions: {
-              enableHighAccuracy: true
-            },
-            trackUserLocation: true
-          }));
   </script>
 
 </body>
