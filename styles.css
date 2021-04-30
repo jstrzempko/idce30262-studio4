@@ -17,14 +17,13 @@ h2 {
 }
 
 h3 {
-  color: #000;
+  color: #F5F5F5;
   font-size: 1em;
   font-family: 'Helvetica', 'Sans-Serif';
 }
 
-
 p {
-  font-size: 1em;
+  font-size: 16px;
   font-family: 'Helvetica', 'Arial', 'Sans-Serif';
   line-height: 1.4em;
   color: #F5F5F5;
@@ -45,7 +44,7 @@ li {
   border-right: 2px #383838;
 }
 
-/* Add a border to all( but not the last) list items */
+/* Add a border to all (but not the last) list items */
 li:last-child {
   border-right: none;
 }
