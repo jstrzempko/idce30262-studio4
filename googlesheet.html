@@ -98,6 +98,17 @@
   <div id='map'></div>
 
   <script>
+    var transformRequest = (url, resourceType) => {
+      var isMapboxRequest =
+        url.slice(8, 22) === "api.mapbox.com" ||
+        url.slice(10, 26) === "tiles.mapbox.com";
+      return {
+        url: isMapboxRequest ?
+          url.replace("?", "?pluginName=sheetMapper&") :
+          url
+      };
+    };
+
     // add mapbox access token
     mapboxgl.accessToken = 'pk.eyJ1IjoianN0cnplbXBrbyIsImEiOiJja2xoN3FnaHMwMHVnMnVtZ3R4ZGhyMWlkIn0.A-mfTeGCl1XSWMWhimG5HA';
 
@@ -107,6 +118,7 @@
       style: 'mapbox://styles/jstrzempko/cko3mhi0o054d17q96cfa8gkh', // custom style
       center: [-122.411, 37.785], // starting position [lng, lat]
       zoom: 10, // starting zoom
+      transformRequest: transformRequest
     });
 
     // connect the google sheets spreadsheet
