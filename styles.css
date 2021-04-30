@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'ubunturegular';
+  src: url('../idce30262-studio4/fonts/ubuntu-regular-webfont.woff2') format('woff2'),
+    url('../idce30262-studio4/fonts/ubuntu-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   background-color: #383838;
   margin: 60px auto;
@@ -7,7 +15,7 @@ body {
 h1 {
   color: #F5F5F5;
   font-size: 2.5em;
-  font-family: 'Helvetica', 'Sans-Serif';
+  font-family: 'ubunturegular', 'Helvetica', 'Sans-Serif';
 }
 
 h2 {
