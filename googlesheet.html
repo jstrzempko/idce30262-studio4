@@ -109,16 +109,17 @@
   <script>
     var transformRequest = (url, resourceType) => {
       var isMapboxRequest =
-        url.slice(8, 22) === "api.mapbox.com" ||
-        url.slice(10, 26) === "tiles.mapbox.com";
+        url.slice(8, 22) === 'api.mapbox.com' ||
+        url.slice(10, 26) === 'tiles.mapbox.com';
       return {
         url: isMapboxRequest ?
-          url.replace("?", "?pluginName=sheetMapper&") : url
+          url.replace('?', '?pluginName=sheetMapper&') : url,
       };
     };
 
     // add mapbox access token
-    mapboxgl.accessToken = 'pk.eyJ1IjoianN0cnplbXBrbyIsImEiOiJja2xoN3FnaHMwMHVnMnVtZ3R4ZGhyMWlkIn0.A-mfTeGCl1XSWMWhimG5HA';
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoianN0cnplbXBrbyIsImEiOiJja2xoN3FnaHMwMHVnMnVtZ3R4ZGhyMWlkIn0.A-mfTeGCl1XSWMWhimG5HA';
 
     // add map variable with settings
     var map = new mapboxgl.Map({
@@ -126,13 +127,14 @@
       style: 'mapbox://styles/jstrzempko/cko4erp7n15kx17s8s4dnpbry', // custom style
       center: [-122.411, 37.785], // starting position [lng, lat]
       zoom: 10, // starting zoom
-      transformRequest: transformRequest
+      transformRequest: transformRequest,
     });
 
     // connect the google sheets spreadsheet
     $(document).ready(function() {
       $.ajax({
-        type: "GET",
+        type: 'GET',
+
         // csv export link will be specific to the google sheet chosen
         url: 'https://docs.google.com/spreadsheets/d/1o9jpKsqQRKVssf5vQ8o7AGomLGCF7oI-bZLqxpL1y6M/gviz/tq?tqx=out:csv&sheet=sheet1',
         dataType: "text",
@@ -159,8 +161,8 @@
               },
               'paint': {
                 'circle-radius': 5,
-                'circle-color': "#ffc500",
-                'circle-stroke-color': "#dc921c",
+                'circle-color': '#ffc500',
+                'circle-stroke-color': '#dc921c',
                 'circle-stroke-width': 2,
               }
             });
