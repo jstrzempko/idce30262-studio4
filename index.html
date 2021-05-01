@@ -54,11 +54,13 @@
     var map = L.map('map').setView([42.35, -71.08], 13);
 
     // load a tile layer
-    L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png', {
-      attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
-      maxZoom: 17,
-      minZoom: 9,
+    L.tileLayer('https://{s}.tile.thunderforest.com/pioneer/{z}/{x}/{y}.png?apikey={apikey}', {
+      attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      apikey: 'd3013c66d08a49b883009ce84981feef'
     }).addTo(map);
+
+
+    attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
 
     // bike lanes
     //L.tileLayer('http://tiles.mapc.org/trailmap-onroad/{z}/{x}/{y}.png', {
@@ -132,8 +134,8 @@
     //});
 
     map.setZoom(12);
-    $.getJSON('rodents.geojson', function (data) {
-      var locations = data.features.map(function (rat) {
+    $.getJSON('rodents.geojson', function(data) {
+      var locations = data.features.map(function(rat) {
         // the heatmap plugin wants an array of each location
         var location = rat.geometry.coordinates.reverse();
         location.push(0.5);
