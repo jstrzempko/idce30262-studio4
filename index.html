@@ -10,6 +10,10 @@
 
   <script src="jquery-2.1.1.min.js"></script>
 
+  <link rel="stylesheet" href="./Leaflet.markercluster-1.0.5/MarkerCluster.css" />
+
+  <script src="./Leaflet.markercluster-1.0.5/leaflet.markercluster.js"></script>
+
   <!-- Add CSS styling info for the map -->
   <style type="text/css">
     #map {
@@ -81,7 +85,7 @@
 
     $.getJSON('neighborhoods.geojson', function(hoodData) {
       L.geoJson(hoodData, {
-        style: function(feature) {
+        style: function (feature) {
           var fillColor,
             density = feature.properties.density;
           if (density > 80) fillColor = '#006837';
@@ -97,26 +101,30 @@
             fillOpacity: .6,
           };
         },
-        onEachFeature: function(feature, layer) {
+
+        onEachFeature: function (feature, layer) {
           layer.bindPopup('<strong>' + feature.properties.Name + '</strong><br/>' + feature.properties.density + ' rats per square mile');
         }
       }).addTo(map);
     });
 
-    $.getJSON('rodents.geojson', function(data) {
+    $.getJSON('rodents.geojson', function (data) {
       var ratIcon = L.icon({
         iconUrl: 'rat.png',
         iconSize: [60, 50],
       });
-      L.geoJson(data, {
-        pointToLayer: function(feature, latlng) {
+      var rodents = L.geoJson(data, {
+        pointToLayer: function (feature, latlng) {
           var marker = L.marker(latlng, {
             icon: ratIcon,
           });
           marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
           return marker;
         }
-      }).addTo(map);
+      });
+      var clusters = L.markerClusterGroup();
+      clusters.addLayer(rodents);
+      map.addLayer(clusters);
     });
   </script>
 </body>
