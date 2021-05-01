@@ -2,10 +2,11 @@
 <html>
 
 <head>
+  <meta charset="utf-8">
   <title>Studio Week 4</title>
   <!-- Adding in the Leaflet CSS file -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
-<!-- Adding in the Leaflet MarkerCluster CSS file -->
+  <!-- Adding in the Leaflet MarkerCluster CSS file -->
   <link rel="stylesheet" href="css/MarkerCluster.css" />
   <!-- Adding Leaflet JavaScript file -->
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
@@ -85,7 +86,7 @@
 
     $.getJSON('neighborhoods.geojson', function(hoodData) {
       L.geoJson(hoodData, {
-        style: function (feature) {
+        style: function(feature) {
           var fillColor,
             density = feature.properties.density;
           if (density > 80) fillColor = '#006837';
