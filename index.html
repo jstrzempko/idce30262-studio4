@@ -23,6 +23,10 @@
       border-radius: 10px;
       height: 600px;
     }
+    #maptwo {
+      border-radius: 10px;
+      height: 600px;
+    }
   </style>
   <!-- Adding styling info for page layout by reading in a CSS file -->
   <link rel="stylesheet" href="css/styles.css">
@@ -49,6 +53,10 @@
   <!-- Add a div to give the map somewhere to go -->
   <div id='map'></div>
 
+  <p></p>
+
+  <div id='maptwo'></div>
+
   <script>
     // initialize the map
     var map = L.map('map').setView([42.35, -71.08], 13);
@@ -58,7 +66,6 @@
       attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       apikey: 'd3013c66d08a49b883009ce84981feef'
     }).addTo(map);
-
 
     attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
 
@@ -147,6 +154,61 @@
       });
       map.addLayer(heat);
     });
+
+    // initialize the map
+    var maptwo = L.map('maptwo').setView([42.35, -71.08], 13);
+
+    // load a tile layer
+    L.tileLayer('https://{s}.tile.thunderforest.com/pioneer/{z}/{x}/{y}.png?apikey={apikey}', {
+      attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      apikey: 'd3013c66d08a49b883009ce84981feef'
+    }).addTo(maptwo)
+
+    $.getJSON('neighborhoods.geojson', function(hoodData) {
+      L.geoJson(hoodData, {
+        style: function(feature) {
+          var fillColor,
+            density = feature.properties.density;
+          if (density > 80) fillColor = '#620000';
+          else if (density > 40) fillColor = '#870007';
+          else if (density > 20) fillColor = '#ae0008';
+          else if (density > 10) fillColor = '#d60006';
+          else if (density > 0) fillColor = '#ff0000';
+          else fillColor = '#f7f7f7'; // no data
+          return {
+            color: '#f7f7f7',
+            weight: 1,
+            fillColor: fillColor,
+            fillOpacity: .6,
+          };
+        },
+
+        onEachFeature: function(feature, layer) {
+          layer.bindPopup('<strong>' + feature.properties.Name + '</strong><br/>' + feature.properties.density + ' rats per square mile');
+        }
+      }).addTo(maptwo);
+    });
+
+    $.getJSON('rodents.geojson', function (data) {
+      var ratIcon = L.icon({
+        iconUrl: 'rat.png',
+        iconSize: [60, 50],
+      });
+      var rodents = L.geoJson(data, {
+        pointToLayer: function (feature, latlng) {
+          var marker = L.marker(latlng, {
+            icon: ratIcon,
+          });
+          marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
+          return marker;
+        }
+      });
+
+      var clusters = L.markerClusterGroup();
+      clusters.addLayer(rodents);
+      map.addLayer(clusters);
+    });
+
   </script>
 </body>
 
