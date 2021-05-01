@@ -169,11 +169,11 @@
         style: function(feature) {
           var fillColor,
             density = feature.properties.density;
-          if (density > 80) fillColor = '#620000';
-          else if (density > 40) fillColor = '#870007';
-          else if (density > 20) fillColor = '#ae0008';
-          else if (density > 10) fillColor = '#d60006';
-          else if (density > 0) fillColor = '#ff0000';
+          if (density > 80) fillColor = '#320000';
+          else if (density > 40) fillColor = '#600817';
+          else if (density > 20) fillColor = '#921625';
+          else if (density > 10) fillColor = '#c82731';
+          else if (density > 0) fillColor = '#ff3b3b';
           else fillColor = '#f7f7f7'; // no data
           return {
             color: '#f7f7f7',
@@ -182,6 +182,7 @@
             fillOpacity: .6,
           };
         },
+
 
         onEachFeature: function(feature, layer) {
           layer.bindPopup('<strong>' + feature.properties.Name + '</strong><br/>' + feature.properties.density + ' rats per square mile');
