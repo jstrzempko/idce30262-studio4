@@ -30,6 +30,37 @@
       border-radius: 10px;
       height: 600px;
     }
+
+    .legend {
+      line-height: 18px;
+      color: #333333;
+      font-family: 'Open Sans', Helvetica, sans-serif;
+      padding: 6px 8px;
+      background: white;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+    }
+
+    .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.7;
+    }
+
+    .legend img {
+      width: 18px;
+      height: 18px;
+      float: left;
+    }
+
+    .legend p {
+      font-size: 12px;
+      line-height: 18px;
+      margin: 0;
+    }
   </style>
   <!-- Adding styling info for page layout by reading in a CSS file -->
   <link rel="stylesheet" href="css/styles.css">
@@ -158,41 +189,6 @@
       map.addLayer(heat);
     });
 
-    // initialize the second map
-    var maptwo = L.map('maptwo').setView([42.35, -71.08], 13);
-
-    // load a tile layer
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
-    }).addTo(maptwo)
-
-
-    $.getJSON('neighborhoods.geojson', function(hoodData) {
-      L.geoJson(hoodData, {
-        style: function(feature) {
-          var fillColor,
-            density = feature.properties.density;
-          if (density > 80) fillColor = '#000000';
-          else if (density > 40) fillColor = '#420f1d';
-          else if (density > 20) fillColor = '#820327';
-          else if (density > 10) fillColor = '#c20023';
-          else if (density > 0) fillColor = '#ff0000';
-          else fillColor = '#929292'; // no data
-          return {
-            color: '#ededed',
-            weight: 1,
-            fillColor: fillColor,
-            fillOpacity: .6,
-          };
-        },
-
-
-        onEachFeature: function(feature, layer) {
-          layer.bindPopup('<strong>' + feature.properties.Name + '</strong><br/>' + feature.properties.density + ' rats per square mile');
-        }
-      }).addTo(maptwo);
-    });
-
     $.getJSON('rodents.geojson', function(data) {
       var ratIcon = L.icon({
         iconUrl: 'rat.png',
@@ -211,7 +207,73 @@
       var clusters = L.markerClusterGroup();
       clusters.addLayer(rodents);
       map.addLayer(clusters);
+
+      // Add Scale Bar to Map
+      L.control.scale({
+        position: 'bottomleft'
+      }).addTo(map);
+
+      // initialize the second map
+      var maptwo = L.map('maptwo').setView([42.35, -71.08], 13);
+
+      // load a tile layer
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+      }).addTo(maptwo)
+
+      $.getJSON('neighborhoods.geojson', function(hoodData) {
+        L.geoJson(hoodData, {
+          style: function(feature) {
+            var fillColor,
+              density = feature.properties.density;
+            if (density > 80) fillColor = '#000000';
+            else if (density > 40) fillColor = '#420f1d';
+            else if (density > 20) fillColor = '#820327';
+            else if (density > 10) fillColor = '#c20023';
+            else if (density > 0) fillColor = '#ff0000';
+            else fillColor = '#929292'; // no data
+            return {
+              color: '#ededed',
+              weight: 1,
+              fillColor: fillColor,
+              fillOpacity: .6,
+            };
+          },
+
+          onEachFeature: function(feature, layer) {
+            layer.bindPopup('<strong>' + feature.properties.Name + '</strong><br/>' + feature.properties.density + ' rats per square mile');
+          }
+        }).addTo(maptwo);
+      });
+
     });
+
+    // Create Leaflet Control Object for Legend
+    var legend = L.control({
+      position: 'topright'
+    });
+
+    // Function that runs when legend is added to map
+    legend.onAdd = function(maptwo) {
+
+      // Create Div Element and Populate it with HTML
+      var div = L.DomUtil.create('div', 'legend');
+      div.innerHTML += '<b>Rat Density per sq. mi.</b><br />';
+      div.innerHTML += '<b>by Neighborhood</b><br/>';
+      div.innerHTML += '<i style="background: #993404"></i><p>> 80</p>';
+      div.innerHTML += '<i style="background: #d95f0e"></i><p>> 40</p>';
+      div.innerHTML += '<i style="background: #fe9929"></i><p>> 20</p>';
+      div.innerHTML += '<i style="background: #fed98e"></i><p>> 10</p>';
+      div.innerHTML += '<i style="background: #ffffd4"></i><p>> 0</p>';
+      div.innerHTML += '<i style="background: #f7f7f7"></i><p>No Data</p>';
+
+      // Return the Legend div containing the HTML content
+      return div;
+
+    };
+
+    // Add Legend to Map
+    legend.addTo(maptwo);
   </script>
 </body>
 
