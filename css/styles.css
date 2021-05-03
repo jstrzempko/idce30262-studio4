@@ -36,6 +36,13 @@ h4 {
   font-family: 'ubunturegular', 'Helvetica', 'Sans-Serif';
 }
 
+h5 {
+  color: #101010;
+  font-size: 1em;
+  font-family: 'ubunturegular', 'Helvetica', 'Sans-Serif';
+  line-height: 1.4em;
+}
+
 p {
   font-size: 16px;
   font-family: 'ubunturegular', 'Helvetica', 'Arial', 'Sans-Serif';
@@ -53,6 +60,12 @@ p a:hover {
   color:  #639473;
   background-color: transparent;
   text-decoration: underline;
+}
+
+p a:visited {
+  color: #82ab8f;
+  background-color: transparent;
+  text-decoration: none;
 }
 
 ul {
