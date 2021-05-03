@@ -41,7 +41,7 @@
     }
 
     .mapboxgl-popup-content h3 {
-      background: #dc921c;
+      background: #1e462b;
       text-align: center;
       color: #fff;
       margin: 0;
@@ -67,7 +67,7 @@
     }
 
     .mapboxgl-popup-anchor-top>.mapboxgl-popup-tip {
-      border-bottom-color: rgb(61, 59, 59);
+      border-bottom-color: #1e462b;
     }
   </style>
   <!-- Adding styling info for page layout by reading in a CSS file -->
@@ -80,7 +80,7 @@
     <h1 style="text-align: center;">Studio Week 4</h1>
   </div>
   <div>
-    <h2 style="text-align: center;">Adventure is out there!</h2>
+    <h2 style="text-align: center;">Worcester Community Fridges</h2>
   </div>
   <!-- Add multiple pages to web page-->
   <!-- active class displays the grey box around current page-->
@@ -99,6 +99,15 @@
   <!-- Promise polyfill script is required to use Mapbox GL Geocoder in IE 11. -->
   <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+
+  <div>
+    <h2>Worcestercommunityfridges@gmail.com, 508.244.1770, @woo.fridge</h2>
+    <p>Wondering what to donate? Here are some guidelines: https://www.worcestercommunityfridges.com/food-guidelines</p>
+    <p>Ones around Boston: https://boston.eater.com/maps/community-fridges-boston</p>
+    <p>Find a Freedge: https://freedge.org/locations/</p>
+    <p>https://linktr.ee/worcesterfreefridge</p>
+    <p style="text-align: center;"><img src="images/" height=500px>
+  </div>
 
   <!-- Add a div to give the map somewhere to go -->
   <div id='map'></div>
@@ -121,7 +130,7 @@
   // add map variable with settings
   var map = new mapboxgl.Map({
     container: 'map', // container id
-    style: 'mapbox://styles/jstrzempko/cko4erp7n15kx17s8s4dnpbry', // custom style
+    style: 'mapbox://styles/jstrzempko/cko8235um1c5417nqoo0ox2lc', // custom style
     center: [-71.809588, 42.256221], // starting position [lng, lat]
     zoom: 14, // starting zoom
     transformRequest: transformRequest,
@@ -157,9 +166,9 @@
               'data': data
             },
             'paint': {
-              'circle-radius': 5,
-              'circle-color': '#ffc500',
-              'circle-stroke-color': '#dc921c',
+              'circle-radius': 8,
+              'circle-color': '#2e7545',
+              'circle-stroke-color': '#1e462b',
               'circle-stroke-width': 2,
             }
           });
@@ -172,7 +181,7 @@
             //set popup text
             //You can adjust the values of the popup to match the headers of your CSV.
             // For example: e.features[0].properties.Name is retrieving information from the field Name in the original CSV.
-            var description = `<h3>` + e.features[0].properties.Project + `</h3>` + `<h4>` + `<b>` + `Address: ` + `</b>` + e.features[0].properties.Address + `</h4>` + `<h4>` + `<b>` + `Phone: ` + `</b>` + e.features[0].properties.Phone + `</h4>`;
+            var description = `<h3>` + e.features[0].properties.Name + `</h3>` + `<h4>` + `<b>` + `Address: ` + `</b>` + e.features[0].properties.Address + `</h4>` + `<h4>` + `<b>` + `Phone: ` + `</b>` + e.features[0].properties.Phone + `</h4>`;
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
