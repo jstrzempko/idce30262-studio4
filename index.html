@@ -112,8 +112,8 @@
           else if (density > 0) fillColor = '#ff0000';
           else fillColor = '#929292'; // no data
           return {
-            color: '#ededed',
-            weight: 1,
+            color: '#929292',
+            weight: 0.5,
             fillColor: fillColor,
             fillOpacity: .6,
           };
@@ -127,7 +127,7 @@
 
     $.getJSON('rodents.geojson', function(data) {
       var ratIcon = L.icon({
-        iconUrl: 'rat.png',
+        iconUrl: 'images/rat.png',
         iconSize: [60, 50],
       });
       var rodents = L.geoJson(data, {
@@ -155,7 +155,7 @@
 
       // Create Div Element and Populate it with HTML
       var div = L.DomUtil.create('div', 'legend');
-      div.innerHTML += '<b>Rat Density per sq. mi.</b><br />';
+      div.innerHTML += '<b>Rat Density per square mile</b><br />';
       div.innerHTML += '<b>by Neighborhood</b><br/>';
       div.innerHTML += '<i style="background: #000000"></i><b>> 80</b><br>';
       div.innerHTML += '<i style="background: #420f1d"></i><b>> 40</b><br>';
@@ -163,8 +163,8 @@
       div.innerHTML += '<i style="background: #c20023"></i><b>> 10</b><br>';
       div.innerHTML += '<i style="background: #ff0000"></i><b>> 0</b><br>';
       div.innerHTML += '<i style="background: #929292"></i><b>No Data</b><br>';
-      div.innerHTML += '<hr><img src="rat.png"><b>Rat sighting.</b><br>';
-      div.innerHTML += '<img src="images/clusters.png"><b>Grouped rat sightings.</b><br>';
+      div.innerHTML += '<hr><img src="images/rat.png"><b>Rat sighting</b><br>';
+      div.innerHTML += '<img src="images/clusters.png"><b>Grouped rat sightings</b><br>';
 
       // Return the Legend div containing the HTML content
       return div;
@@ -194,7 +194,7 @@
 
     //$.getJSON('rodents.geojson', function(data) {
     //  var ratIcon = L.icon({
-    //    iconUrl: 'rat.gif',
+    //    iconUrl: 'images/rat.gif',
     //    iconSize: [50, 40],
     //  });
     //  L.geoJson(data, {
