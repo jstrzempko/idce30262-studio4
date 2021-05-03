@@ -17,7 +17,7 @@
   <style type="text/css">
     #map {
       border-radius: 10px;
-      height: 600px;
+      height: 400px;
     }
 
     /* Popup styling */
@@ -80,7 +80,7 @@
     <h1 style="text-align: center;">Studio Week 4</h1>
   </div>
   <div>
-    <h2 style="text-align: center;">Worcester Community Fridges</h2>
+    <h4 style="text-align: center;">Worcester Community Fridges</h4>
   </div>
   <!-- Add multiple pages to web page-->
   <!-- active class displays the grey box around current page-->
@@ -101,14 +101,16 @@
   <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
 
   <div>
-    <h2>Worcestercommunityfridges@gmail.com, 508.244.1770, @woo.fridge</h2>
-    <p>Wondering what to donate? Here are some guidelines: https://www.worcestercommunityfridges.com/food-guidelines</p>
-    <p>Ones around Boston: https://boston.eater.com/maps/community-fridges-boston</p>
-    <p>Find a Freedge: https://freedge.org/locations/</p>
-    <p>https://linktr.ee/worcesterfreefridge</p>
+    <p style="text-align: center;">The <a href="https://www.worcestercommunityfridges.com/">Worcester Community Fridges</a> give Worcester residents daily access to fresh food.</p>
+    <p style="text-align: center;">Wondering what to donate? <a href=" https://www.worcestercommunityfridges.com/food-guidelines">Here are some guidelines!</a></p>
+    <p style="text-align: center;">Looking for similar resources in your area? <a href="https://freedge.org/locations/">Search for a Freedge here!</a><p>
+    <p style="text-align: center;">Are you from Boston? <a href="https://boston.eater.com/maps/community-fridges-boston">Check this updated list of fridges from Eater.com!</a></p>
+    <p style="text-align: center;">Looking to donate or get involved? <a href="https://linktr.ee/worcesterfreefridge">Find more information on WFF's linktree.</a></p>
+    <p style="text-align: center;"><u>Email:</u> Worcestercommunityfridges@gmail.com, <u>Phone:</u> 508.244.1770, <u>Instagram Handle:</u> @woo.fridge</p>
+    <p style="text-align: center;">Explore the map of Worcester community fridges below! <i>Pictured from left to right: 44 Portland St, 300 Southbridge St, and 910 Main St.</i><p>
     <p style="text-align: center;"><img src="images/44portland.jpg" height=200px>
-    <p style="text-align: center;"><img src="images/300southbridge.jpg" height=200px>
-    <p style="text-align: center;"><img src="images/910mainst.jpg" height=200px>
+    <img src="images/300southbridge.jpg" height=200px>
+    <img src="images/910mainst.jpg" height=200px></p>
   </div>
 
   <!-- Add a div to give the map somewhere to go -->
@@ -183,7 +185,7 @@
             //set popup text
             //You can adjust the values of the popup to match the headers of your CSV.
             // For example: e.features[0].properties.Name is retrieving information from the field Name in the original CSV.
-            var description = `<h3>` + e.features[0].properties.Name + `</h3>` + `<h4>` + `<b>` + `Address: ` + `</b>` + e.features[0].properties.Address + `</h4>` + `<h4>` + `<b>` + `Phone: ` + `</b>` + e.features[0].properties.Phone + `</h4>`;
+            var description = `<h3>` + e.features[0].properties.Name + `</h3>` + `<h4>` + `<b>` + `Location: ` + `</b>` + e.features[0].properties.Location + `</h4>` + `<h4>` + `<b>` + `Address: ` + `</b>` + e.features[0].properties.Address + `</h4>`;
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
