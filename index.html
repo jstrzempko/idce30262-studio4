@@ -72,7 +72,7 @@
     <h1 style="text-align: center;">Studio Week 4</h1>
   </div>
   <div>
-    <h2 style="text-align: center;">Rat Map</h2>
+    <h2 style="text-align: center;">Rat Sightings in Boston</h2>
   </div>
   <!-- Add multiple pages to web page-->
   <!-- active class displays the grey box around current page-->
@@ -84,15 +84,14 @@
   </ul>
   <br>
 
+  <!-- Add descriptive/instructional text -->
+  <p style="text-align: center;">Interact with the map by clicking on the polygons or the clusters. See the legend for explanatory information.</p>
+
   <!-- Add a div to give the map somewhere to go -->
   <div id='map'></div>
 
-  <p></p>
-
-  <div id='maptwo'></div>
-
   <script>
-    // initialize the map
+    // initialize the first map
     var map = L.map('map').setView([42.35, -71.08], 13);
 
     // load a tile layer
@@ -101,7 +100,83 @@
       apikey: 'd3013c66d08a49b883009ce84981feef'
     }).addTo(map);
 
-    attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+    $.getJSON('neighborhoods.geojson', function(hoodData) {
+      L.geoJson(hoodData, {
+        style: function(feature) {
+          var fillColor,
+            density = feature.properties.density;
+          if (density > 80) fillColor = '#000000';
+          else if (density > 40) fillColor = '#420f1d';
+          else if (density > 20) fillColor = '#820327';
+          else if (density > 10) fillColor = '#c20023';
+          else if (density > 0) fillColor = '#ff0000';
+          else fillColor = '#929292'; // no data
+          return {
+            color: '#ededed',
+            weight: 1,
+            fillColor: fillColor,
+            fillOpacity: .6,
+          };
+        },
+
+        onEachFeature: function(feature, layer) {
+          layer.bindPopup('<strong>' + feature.properties.Name + '</strong><br/>' + feature.properties.density + ' rats per square mile');
+        }
+      }).addTo(map);
+    });
+
+    $.getJSON('rodents.geojson', function(data) {
+      var ratIcon = L.icon({
+        iconUrl: 'rat.png',
+        iconSize: [60, 50],
+      });
+      var rodents = L.geoJson(data, {
+        pointToLayer: function(feature, latlng) {
+          var marker = L.marker(latlng, {
+            icon: ratIcon,
+          });
+          marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
+          return marker;
+        }
+      });
+
+      var clusters = L.markerClusterGroup();
+      clusters.addLayer(rodents);
+      map.addLayer(clusters);
+    });
+
+    // Create Leaflet Control Object for Legend
+    var legend = L.control({
+      position: 'topright'
+    });
+
+    // Function that runs when legend is added to map
+    legend.onAdd = function(map) {
+
+      // Create Div Element and Populate it with HTML
+      var div = L.DomUtil.create('div', 'legend');
+      div.innerHTML += '<b>Rat Density per sq. mi.</b><br />';
+      div.innerHTML += '<b>by Neighborhood</b><br/>';
+      div.innerHTML += '<i style="background: #000000"></i><b>> 80</b><br>';
+      div.innerHTML += '<i style="background: #420f1d"></i><b>> 40</b><br>';
+      div.innerHTML += '<i style="background: #820327"></i><b>> 20</b><br>';
+      div.innerHTML += '<i style="background: #c20023"></i><b>> 10</b><br>';
+      div.innerHTML += '<i style="background: #ff0000"></i><b>> 0</b><br>';
+      div.innerHTML += '<i style="background: #929292"></i><b>No Data</b><br>';
+
+      // Return the Legend div containing the HTML content
+      return div;
+    };
+
+    // Add Legend to Map
+    legend.addTo(map);
+
+    // Add Scale Bar to Map
+    L.control.scale({
+      position: 'bottomleft'
+    }).addTo(map);
+
+    // extra code below for different map options/intermediary steps in the tutorial
 
     // bike lanes
     //L.tileLayer('http://tiles.mapc.org/trailmap-onroad/{z}/{x}/{y}.png', {
@@ -129,151 +204,21 @@
     //  }).addTo(map);
     //});
 
-    //$.getJSON('neighborhoods.geojson', function(hoodData) {
-    //  L.geoJson(hoodData, {
-    //    style: function(feature) {
-    //      var fillColor,
-    //        density = feature.properties.density;
-    //      if (density > 80) fillColor = '#006837';
-    //      else if (density > 40) fillColor = '#31a354';
-    //      else if (density > 20) fillColor = '#78c679';
-    //      else if (density > 10) fillColor = '#c2e699';
-    //      else if (density > 0) fillColor = '#ffffcc';
-    //      else fillColor = '#f7f7f7'; // no data
-    //      return {
-    //        color: '#999',
-    //        weight: 1,
-    //        fillColor: fillColor,
-    //        fillOpacity: .6,
-    //      };
-    //    },
-
-    //    onEachFeature: function(feature, layer) {
-    //      layer.bindPopup('<strong>' + feature.properties.Name + '</strong><br/>' + feature.properties.density + ' rats per square mile');
-    //    }
-    //  }).addTo(map);
-    //});
-
+    //heatmap of rodents
     //$.getJSON('rodents.geojson', function(data) {
-    //  var ratIcon = L.icon({
-    //    iconUrl: 'rat.png',
-    //    iconSize: [60, 50],
-    //  });
-    //  var rodents = L.geoJson(data, {
-    //    pointToLayer: function(feature, latlng) {
-    //      var marker = L.marker(latlng, {
-    //        icon: ratIcon,
-    //      });
-    //      marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
-    //      return marker;
-    //    }
+    //  var locations = data.features.map(function(rat) {
+    //    // the heatmap plugin wants an array of each location
+    //    var location = rat.geometry.coordinates.reverse();
+    //    location.push(0.5);
+    //    return location; // e.g. [50.5, 30.5, 0.2], // lat, lng, intensity
     //  });
 
-    //  var clusters = L.markerClusterGroup();
-    //  clusters.addLayer(rodents);
-    //  map.addLayer(clusters);
+    //  var heat = L.heatLayer(locations, {
+    //    radius: 25,
+    //  });
+    //  map.addLayer(heat);
     //});
 
-    map.setZoom(12);
-    $.getJSON('rodents.geojson', function(data) {
-      var locations = data.features.map(function(rat) {
-        // the heatmap plugin wants an array of each location
-        var location = rat.geometry.coordinates.reverse();
-        location.push(0.5);
-        return location; // e.g. [50.5, 30.5, 0.2], // lat, lng, intensity
-      });
-
-      var heat = L.heatLayer(locations, {
-        radius: 25,
-      });
-      map.addLayer(heat);
-    });
-
-    $.getJSON('rodents.geojson', function(data) {
-      var ratIcon = L.icon({
-        iconUrl: 'rat.png',
-        iconSize: [60, 50],
-      });
-      var rodents = L.geoJson(data, {
-        pointToLayer: function(feature, latlng) {
-          var marker = L.marker(latlng, {
-            icon: ratIcon,
-          });
-          marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
-          return marker;
-        }
-      });
-
-      var clusters = L.markerClusterGroup();
-      clusters.addLayer(rodents);
-      map.addLayer(clusters);
-
-      // Add Scale Bar to Map
-      L.control.scale({
-        position: 'bottomleft'
-      }).addTo(map);
-
-      // initialize the second map
-      var maptwo = L.map('maptwo').setView([42.35, -71.08], 13);
-
-      // load a tile layer
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
-      }).addTo(maptwo)
-
-      $.getJSON('neighborhoods.geojson', function(hoodData) {
-        L.geoJson(hoodData, {
-          style: function(feature) {
-            var fillColor,
-              density = feature.properties.density;
-            if (density > 80) fillColor = '#000000';
-            else if (density > 40) fillColor = '#420f1d';
-            else if (density > 20) fillColor = '#820327';
-            else if (density > 10) fillColor = '#c20023';
-            else if (density > 0) fillColor = '#ff0000';
-            else fillColor = '#929292'; // no data
-            return {
-              color: '#ededed',
-              weight: 1,
-              fillColor: fillColor,
-              fillOpacity: .6,
-            };
-          },
-
-          onEachFeature: function(feature, layer) {
-            layer.bindPopup('<strong>' + feature.properties.Name + '</strong><br/>' + feature.properties.density + ' rats per square mile');
-          }
-        }).addTo(maptwo);
-      });
-
-    });
-
-    // Create Leaflet Control Object for Legend
-    var legend = L.control({
-      position: 'topright'
-    });
-
-    // Function that runs when legend is added to map
-    legend.onAdd = function(maptwo) {
-
-      // Create Div Element and Populate it with HTML
-      var div = L.DomUtil.create('div', 'legend');
-      div.innerHTML += '<b>Rat Density per sq. mi.</b><br />';
-      div.innerHTML += '<b>by Neighborhood</b><br/>';
-      div.innerHTML += '<i style="background: #993404"></i><p>> 80</p>';
-      div.innerHTML += '<i style="background: #d95f0e"></i><p>> 40</p>';
-      div.innerHTML += '<i style="background: #fe9929"></i><p>> 20</p>';
-      div.innerHTML += '<i style="background: #fed98e"></i><p>> 10</p>';
-      div.innerHTML += '<i style="background: #ffffd4"></i><p>> 0</p>';
-      div.innerHTML += '<i style="background: #f7f7f7"></i><p>No Data</p>';
-
-      // Return the Legend div containing the HTML content
-      return div;
-
-    };
-
-    // Add Legend to Map
-    legend.addTo(maptwo);
   </script>
 </body>
 
