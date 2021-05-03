@@ -19,7 +19,7 @@
   <!-- Adding Leaflet Heatmap functionality-->
   <script src="./leaflet-heat.js"></script>
 
-  <!-- Add CSS styling info for the map -->
+  <!-- Add CSS styling info for the map and the legend -->
   <style type="text/css">
     #map {
       border-radius: 10px;
@@ -91,15 +91,16 @@
   <div id='map'></div>
 
   <script>
-    // initialize the first map
+    // initialize the map
     var map = L.map('map').setView([42.35, -71.08], 13);
 
     // load a tile layer
-    L.tileLayer('https://{s}.tile.thunderforest.com/pioneer/{z}/{x}/{y}.png?apikey={apikey}', {
-      attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      apikey: 'd3013c66d08a49b883009ce84981feef'
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd'
     }).addTo(map);
 
+    // create a choropleth neighborhood layer with rat density
     $.getJSON('neighborhoods.geojson', function(hoodData) {
       L.geoJson(hoodData, {
         style: function(feature) {
@@ -113,7 +114,7 @@
           else fillColor = '#929292'; // no data
           return {
             color: '#929292',
-            weight: 0.5,
+            weight: 1,
             fillColor: fillColor,
             fillOpacity: .6,
           };
@@ -125,6 +126,7 @@
       }).addTo(map);
     });
 
+    // add the rat data as clusters with individual rats using rat.png
     $.getJSON('rodents.geojson', function(data) {
       var ratIcon = L.icon({
         iconUrl: 'images/rat.png',
@@ -140,6 +142,7 @@
         }
       });
 
+      // add clustering functionality
       var clusters = L.markerClusterGroup();
       clusters.addLayer(rodents);
       map.addLayer(clusters);
@@ -220,7 +223,6 @@
     //  });
     //  map.addLayer(heat);
     //});
-
   </script>
 </body>
 
