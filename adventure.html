@@ -19,6 +19,56 @@
       border-radius: 10px;
       height: 600px;
     }
+
+    /* Popup styling */
+
+    .mapboxgl-popup {
+      padding-bottom: 5px;
+    }
+
+    .mapboxgl-popup-close-button {
+      display: none;
+    }
+
+    .mapboxgl-popup-content {
+      font: 400 15px/22px 'ubunturegular', 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+      padding: 0;
+      width: 250px;
+    }
+
+    .mapboxgl-popup-content-wrapper {
+      padding: 1%;
+    }
+
+    .mapboxgl-popup-content h3 {
+      background: #dc921c;
+      text-align: center;
+      color: #fff;
+      margin: 0;
+      display: block;
+      padding: 15px;
+      font-weight: 700;
+      margin-top: -5px;
+    }
+
+    .mapboxgl-popup-content h4 {
+      margin: 0;
+      display: block;
+      padding: 10px 3px 10px 10px;
+      font-weight: 400;
+    }
+
+    .mapboxgl-container {
+      cursor: pointer;
+    }
+
+    .mapboxgl-popup-anchor-top>.mapboxgl-popup-content {
+      margin-top: 3px;
+    }
+
+    .mapboxgl-popup-anchor-top>.mapboxgl-popup-tip {
+      border-bottom-color: rgb(61, 59, 59);
+    }
   </style>
   <!-- Adding styling info for page layout by reading in a CSS file -->
   <link rel="stylesheet" href="css/styles.css">
@@ -42,11 +92,123 @@
   </ul>
   <br>
 
+  <!-- Load the `mapbox-gl-geocoder` plugin. -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css" type="text/css">
+
+  <!-- Promise polyfill script is required to use Mapbox GL Geocoder in IE 11. -->
+  <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
 
   <!-- Add a div to give the map somewhere to go -->
   <div id='map'></div>
 
   <script>
+  var transformRequest = (url, resourceType) => {
+    var isMapboxRequest =
+      url.slice(8, 22) === 'api.mapbox.com' ||
+      url.slice(10, 26) === 'tiles.mapbox.com';
+    return {
+      url: isMapboxRequest ?
+        url.replace('?', '?pluginName=sheetMapper&') : url,
+    };
+  };
+
+  // add mapbox access token
+  mapboxgl.accessToken =
+    'pk.eyJ1IjoianN0cnplbXBrbyIsImEiOiJja2xoN3FnaHMwMHVnMnVtZ3R4ZGhyMWlkIn0.A-mfTeGCl1XSWMWhimG5HA';
+
+  // add map variable with settings
+  var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/jstrzempko/cko4erp7n15kx17s8s4dnpbry', // custom style
+    center: [-71.809588, 42.256221], // starting position [lng, lat]
+    zoom: 14, // starting zoom
+    transformRequest: transformRequest,
+  });
+
+  // connect the google sheets spreadsheet
+  $(document).ready(function() {
+    $.ajax({
+      type: 'GET',
+
+      // csv export link will be specific to the google sheet chosen
+      url: 'https://docs.google.com/spreadsheets/d/1KAsSXPD0J2PatauN7NCFBG4Fyg0XivV-8f4PQPPl-lg/gviz/tq?tqx=out:csv&sheet=sheet1',
+      dataType: "text",
+      success: function(csvData) {
+        makeGeoJSON(csvData);
+      }
+    });
+
+    function makeGeoJSON(csvData) {
+      csv2geojson.csv2geojson(csvData, {
+        latfield: 'Latitude',
+        lonfield: 'Longitude',
+        delimiter: ','
+      }, function(err, data) {
+        map.on('load', function() {
+
+          //Add the the layer to the map
+          map.addLayer({
+            'id': 'csvData',
+            'type': 'circle',
+            'source': {
+              'type': 'geojson',
+              'data': data
+            },
+            'paint': {
+              'circle-radius': 5,
+              'circle-color': '#ffc500',
+              'circle-stroke-color': '#dc921c',
+              'circle-stroke-width': 2,
+            }
+          });
+
+          // When a click event occurs on a feature in the csvData layer, open a popup at the
+          // location of the feature, with description HTML from its properties.
+          map.on('click', 'csvData', function(e) {
+            var coordinates = e.features[0].geometry.coordinates.slice();
+
+            //set popup text
+            //You can adjust the values of the popup to match the headers of your CSV.
+            // For example: e.features[0].properties.Name is retrieving information from the field Name in the original CSV.
+            var description = `<h3>` + e.features[0].properties.Project + `</h3>` + `<h4>` + `<b>` + `Address: ` + `</b>` + e.features[0].properties.Address + `</h4>` + `<h4>` + `<b>` + `Phone: ` + `</b>` + e.features[0].properties.Phone + `</h4>`;
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+              coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            //add Popup to map
+
+            new mapboxgl.Popup()
+              .setLngLat(coordinates)
+              .setHTML(description)
+              .addTo(map);
+          });
+
+          // Change the cursor to a pointer when the mouse is over the places layer.
+          map.on('mouseenter', 'csvData', function() {
+            map.getCanvas().style.cursor = 'pointer';
+          });
+
+          // Change it back to a pointer when it leaves.
+          map.on('mouseleave', 'places', function() {
+            map.getCanvas().style.cursor = '';
+          });
+
+          var bbox = turf.bbox(data);
+          map.fitBounds(bbox, {
+            padding: 50
+          });
+
+        });
+
+      });
+    };
+  });
 
   </script>
 </body>

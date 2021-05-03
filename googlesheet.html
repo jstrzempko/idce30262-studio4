@@ -107,6 +107,7 @@
   <div id='map'></div>
 
   <script>
+    // accessing sheetMapper funtionality
     var transformRequest = (url, resourceType) => {
       var isMapboxRequest =
         url.slice(8, 22) === 'api.mapbox.com' ||
@@ -143,6 +144,7 @@
         }
       });
 
+      // turn the csv data into a geojson with lat and lon fields
       function makeGeoJSON(csvData) {
         csv2geojson.csv2geojson(csvData, {
           latfield: 'Latitude',
@@ -151,7 +153,7 @@
         }, function(err, data) {
           map.on('load', function() {
 
-            //Add the the layer to the map
+            // add the layer to the map
             map.addLayer({
               'id': 'csvData',
               'type': 'circle',
@@ -159,6 +161,7 @@
                 'type': 'geojson',
                 'data': data
               },
+              // symbologize the points
               'paint': {
                 'circle-radius': 5,
                 'circle-color': '#ffc500',
@@ -185,8 +188,7 @@
                 coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
               }
 
-              //add Popup to map
-
+              // add Popup to map
               new mapboxgl.Popup()
                 .setLngLat(coordinates)
                 .setHTML(description)
@@ -203,6 +205,7 @@
               map.getCanvas().style.cursor = '';
             });
 
+            // set the bounding box of the map to fit the data
             var bbox = turf.bbox(data);
             map.fitBounds(bbox, {
               padding: 50
